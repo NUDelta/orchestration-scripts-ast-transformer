@@ -51,6 +51,30 @@ There are a couple issues that are worth trying to resolve:
      sure to meet with your mentor to discuss your plan."_
    - **at** studio meeting
 
+## Approach
+
+To resolve the issues above, this repo explores using [babel](https://babeljs.io/) to transform a
+human-friendly version of the orchestration script into a machine-friendly executable version. We do
+this by writing a custom babel plugin that parses the AST of the original code, and makes
+adjustments to it so that it's in a form that the orchestration engine is expecting (e.g., by adding
+`async/await` and `this` to OS function calls).
+
+This, for example, would let us write the following to define a simple trigger to send a message
+during a SIG meeting in a more human-readable form (top) that then gets transformed into what the
+orchestration engine needs:
+
+```javascript
+// input code (what a mentor would write)
+function feedbackOpportunity() {
+  return during(venue("SIG"));
+}
+
+// output code (what the engine will use to execute)
+async function feedbackOpportunity() {
+  return await this.during(await this.venue("SIG"));
+}
+```
+
 ## Installation
 
 1. Make sure you have [Node.js](https://nodejs.org/en/) and
