@@ -62,3 +62,8 @@ There are a couple issues that are worth trying to resolve:
 
 To see a demo of the transformations, run: `yarn start`. This will cause run the code in `index.js`,
 and print out from input code and the transformed output.
+
+## Tests
+
+Testing code for a larger set of examples is also included in `./tests/`. These can be run with
+`yarn test`.

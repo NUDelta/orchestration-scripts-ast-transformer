@@ -2,8 +2,15 @@
   "name": "babel-ast-transform-tester",
   "version": "1.0.0",
   "description": "A testing repo for converting sync. OS code into async. code",
-  "main": "index.js",
   "license": "MIT",
+  "author": "Kapil Garg",
+  "contributors": [
+    "Kapil Garg (https://kgarg.com/)"
+  ],
+  "scripts": {
+    "start": "node index.js",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' jest ./tests"
+  },
   "engines": {
     "node": "^16.x"
   },
@@ -11,5 +18,10 @@
   "dependencies": {
     "@babel/core": "^7.17.9",
     "@babel/types": "^7.17.0"
+  },
+  "devDependencies": {
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "jest": "^27.5.1"
   }
 }
