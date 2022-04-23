@@ -1,0 +1,48 @@
+# Orchestration Scripts AST Transformer
+
+This repo provides a demo and playground for seeing how orchestration script code written with the orchestration programming language can be transformed into representations that the orchestration execution engine can use.
+
+## Design Goal
+
+Due to the way the orchestration execution environment works and the need for most of the OS language functions to be asynchronous (since they query an external Studio API), writing code for orchestration scripts can be syntactically messy, requiring the user to add async/await flags and this.keywords for any OS functions. For instance, these are the script components that need to be specified for prompting students 1 week before their status updates:
+
+```javascript
+// who the script should apply to
+async function applicableSet() {
+    return await this.projects({ filter: this.nonPhdProjects() });
+}
+
+// when the script should run
+async function detector() {
+    return await this.isWeekBefore(this.project.statusUpdateDate);
+}
+
+// what feedback should be provided and when
+async function feedback() {
+    return await this.messageProjectChannel(
+        `You have a status update in 1 week!
+        Make sure to meet with your mentor to discuss your plan.`
+    );
+}
+
+// when the feedback should be delivered
+async function feedbackOpportunity() {
+    return await this.venue("Studio");
+}
+```
+
+There are a couple issues that are worth trying to resolve:
+
+1. Can the `async/await` flags and `this` keywords be added after the script has been composed? These are needed for execution, but are just clutter for script writers.
+
+2. Instead of having a mentor specify each of the components above as separate functions, is there a way to provide a more natural code interface that speaks at the level of a script they want to support? For example:
+    * **for** projects that are not Ph.D. student projects
+    * **when** it's the week before the project's status update,
+    * **then** message the project's slack channel with, *"You have a status update in 1 week! Make sure to meet with your mentor to discuss your plan."*
+    * **at** studio meeting
+
+## Installation
+
+1. Make sure you have [Node.js](https://nodejs.org/en/) and [yarn](https://classic.yarnpkg.com/en/docs/install#mac-stable) installed.
+
+2. Run `yarn install` to install packages.
