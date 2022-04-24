@@ -1,87 +1,64 @@
 import babel from "@babel/core";
 import * as t from "@babel/types";
 
-// babel configuration to add async/await and this
-export const asyncThisTransformerConfig = {
-  plugins: [
-    function orchestrationScriptTransformer() {
-      return {
-        visitor: {
-          FunctionDeclaration(path) {
-            path.node.async = true;
-          },
+const addAsyncAwaitPlugin = function () {
+  return {
+    visitor: {
+      FunctionDeclaration(path) {
+        path.node.async = true;
+      },
 
-          VariableDeclaration(path) {
-            // TODO: may also need to add a check for variables that are stored as objects in the PL
-          },
-
-          // Identifier(path) {
-          //   // don't work on the highest-level identifier
-          //   // TODO: is there a more elegant way to do this? (maybe check parent?)
-          //   if (path.node.name === "detector") {
-          //     return;
-          //   }
-
-          //   // TODO: need to check if the expressions are anything in our library
-          //   // add this keyword to member expression
-          //   // if (t.isCallExpression(path.parentPath.node)) {
-          //   //   path.replaceWith(t.memberExpression(t.thisExpression(), path.node));
-          //   // }
-
-          //   // skip children so we don't repeat
-          //   path.skip();
-          // },
-
-          MemberExpression(path) {
-            // check if the child of the memebr expression is an identifier
-            if (t.isIdentifier(path.node.object)) {
-              // check if the identifier is not a local variable
-              if (!path.scope.hasBinding(path.node.object.name)) {
-                // TODO: need to check if the expressions are anything in our library
-                // add this. to the OS member
-                path.replaceWith(
-                  t.memberExpression(
-                    t.memberExpression(t.thisExpression(), path.node.object),
-                    path.node.property
-                  )
-                );
-              }
-            }
-            // path.replaceWith(
-            //   t.memberExpression(
-            //     t.memberExpression(t.thisExpression(), path.node.object),
-            //     path.node.property
-            //   )
-            // );
-            // path.skip();
-          },
-
-          CallExpression(path) {
-            // TODO: need to check if the expressions are anything in our library
-            // make any calls to OS functions async
-            // check if the call is not already async before adding the await block
-            if (!t.isAwaitExpression(path.parentPath.node)) {
-              path.replaceWith(t.awaitExpression(path.node));
-            }
-
-            // TODO: need to check if the expressions are anything in our library
-            // add this. to OS function calls
-            if (t.isIdentifier(path.node.callee)) {
-              // replace the path this.<expression>
-              path.replaceWith(
-                t.callExpression(
-                  t.memberExpression(t.thisExpression(), path.node.callee),
-                  path.node.arguments
-                )
-              );
-
-              // t.memberExpression(t.thisExpression(), path.node));
-            }
-          },
-        },
-      };
+      CallExpression(path) {
+        // TODO: need to check if the expressions are anything in our library
+        // make any calls to OS functions async
+        // check if the call is not already async before adding the await block
+        if (!t.isAwaitExpression(path.parentPath.node)) {
+          path.replaceWith(t.awaitExpression(path.node));
+        }
+      },
     },
-  ],
+  };
+};
+
+const addThisPlugin = function () {
+  return {
+    visitor: {
+      MemberExpression(path) {
+        // check if the child of the memebr expression is an identifier
+        if (t.isIdentifier(path.node.object)) {
+          // check if the identifier is not a local variable
+          if (!path.scope.hasBinding(path.node.object.name)) {
+            // TODO: need to check if the expressions are anything in our library
+            // add this. to the OS member
+            path.replaceWith(
+              t.memberExpression(
+                t.memberExpression(t.thisExpression(), path.node.object),
+                path.node.property
+              )
+            );
+          }
+        }
+      },
+
+      CallExpression(path) {
+        // TODO: need to check if the expressions are anything in our library
+        // add this. to OS function calls
+        if (t.isIdentifier(path.node.callee)) {
+          // replace the path this.<expression>
+          path.replaceWith(
+            t.callExpression(
+              t.memberExpression(t.thisExpression(), path.node.callee),
+              path.node.arguments
+            )
+          );
+        }
+      },
+    },
+  };
+};
+
+export const asyncThisTransformerConfig = {
+  plugins: [addAsyncAwaitPlugin, addThisPlugin],
 
   // keep any white space so code stays pretty
   retainLines: true,

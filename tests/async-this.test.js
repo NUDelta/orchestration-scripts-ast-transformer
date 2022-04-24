@@ -1,5 +1,5 @@
 import { asyncThisTransformerConfig, transformOSCode } from "../controllers/babelTransformers";
-import { trimLeadingTrailingSpace } from "./utils";
+import { prepareCodeForEqualityTesting } from "./utils";
 
 /**
  * Applicable set tests
@@ -16,9 +16,9 @@ test("applicable set with complex filter", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
-    trimLeadingTrailingSpace(expectedOutput.toString())
-  );
+  // setup received and expected code variables to check equality on
+  let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
+  expect(receivedCode).toMatch(expectedCode);
 });
 
 /**
@@ -44,9 +44,9 @@ test("detector for last SIG meeting", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
-    trimLeadingTrailingSpace(expectedOutput.toString())
-  );
+  // setup received and expected code variables to check equality on
+  let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
+  expect(receivedCode).toMatch(expectedCode);
 });
 
 test("detector for having students send updated sprints after SIG", () => {
@@ -61,9 +61,9 @@ test("detector for having students send updated sprints after SIG", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
-    trimLeadingTrailingSpace(expectedOutput.toString())
-  );
+  // setup received and expected code variables to check equality on
+  let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
+  expect(receivedCode).toMatch(expectedCode);
 });
 
 test("detector for 1 week before Status Update", () => {
@@ -78,9 +78,9 @@ test("detector for 1 week before Status Update", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
-    trimLeadingTrailingSpace(expectedOutput.toString())
-  );
+  // setup received and expected code variables to check equality on
+  let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
+  expect(receivedCode).toMatch(expectedCode);
 });
 
 test("detector for overcommitted on sprint", () => {
@@ -95,9 +95,9 @@ test("detector for overcommitted on sprint", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
-    trimLeadingTrailingSpace(expectedOutput.toString())
-  );
+  // setup received and expected code variables to check equality on
+  let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
+  expect(receivedCode).toMatch(expectedCode);
 });
 
 /**
@@ -116,9 +116,9 @@ test("send feedback to project channel", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
-    trimLeadingTrailingSpace(expectedOutput.toString())
-  );
+  // setup received and expected code variables to check equality on
+  let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
+  expect(receivedCode).toMatch(expectedCode);
 });
 
 /**
@@ -137,9 +137,9 @@ test("feedback opportunity 5 mins before SIG", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
-    trimLeadingTrailingSpace(expectedOutput.toString())
-  );
+  // setup received and expected code variables to check equality on
+  let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
+  expect(receivedCode).toMatch(expectedCode);
 });
 
 /**
@@ -160,9 +160,9 @@ test("non-OS function calls", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
-    trimLeadingTrailingSpace(expectedOutput.toString())
-  );
+  // setup received and expected code variables to check equality on
+  let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
+  expect(receivedCode).toMatch(expectedCode);
 });
 
 test("refer to OS object", () => {
@@ -178,9 +178,9 @@ test("refer to OS object", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
-    trimLeadingTrailingSpace(expectedOutput.toString())
-  );
+  // setup received and expected code variables to check equality on
+  let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
+  expect(receivedCode).toMatch(expectedCode);
 });
 
 test("non-OS object member", () => {
@@ -196,7 +196,7 @@ test("non-OS object member", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
-    trimLeadingTrailingSpace(expectedOutput.toString())
-  );
+  // setup received and expected code variables to check equality on
+  let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
+  expect(receivedCode).toMatch(expectedCode);
 });
