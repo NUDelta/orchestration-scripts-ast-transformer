@@ -17,7 +17,8 @@
   "type": "module",
   "dependencies": {
     "@babel/core": "^7.17.9",
-    "@babel/types": "^7.17.0"
+    "@babel/types": "^7.17.0",
+    "uglify-js": "^3.15.4"
   },
   "devDependencies": {
     "@babel/node": "^7.16.8",
