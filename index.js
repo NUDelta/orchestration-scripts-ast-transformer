@@ -1,4 +1,8 @@
 import { asyncThisTransformerConfig, transformOSCode } from "./controllers/babelTransformers.js";
+import {
+  objectIdentifiers,
+  functionIdentifiers,
+} from "./imports/orchestration-pl/identifierSet.js";
 
 // input programs to test
 const inputCodes = [
@@ -6,7 +10,7 @@ const inputCodes = [
   function detector() {
     // get time for last sig meeting
     let lastSigMeetingTime = lastSigMeeting();
-    lastSigMeetingTime.toString(); // TODO: this is a failure case. this should not have an await
+    lastSigMeetingTime.toString();
 
     // sent notification at the start of the last SIG meeting
     return new Date(lastSigMeetingTime.start_time);
@@ -38,3 +42,6 @@ for (let i = 0; i < inputCodes.length; i++) {
   console.log(`output code: \n${outputCodes[i].toString()}`);
   console.log("-------------------------------------------------------");
 }
+
+console.log(objectIdentifiers);
+console.log(functionIdentifiers);

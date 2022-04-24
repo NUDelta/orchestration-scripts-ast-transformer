@@ -85,12 +85,12 @@ test("detector for 1 week before Status Update", () => {
 
 test("detector for overcommitted on sprint", () => {
   let input = function detector() {
-    return dayOf(venue("SIG")) && project.sprintLog.isOverCommitted();
+    return isDayOf(venue("SIG")) && project.sprintLog.isOverCommitted();
   };
 
   // prettier-ignore
   let expectedOutput = async function detector() {
-    return (await this.dayOf(await this.venue("SIG"))) && (await this.project.sprintLog.isOverCommitted());
+    return (await this.isDayOf(await this.venue("SIG"))) && (await this.project.sprintLog.isOverCommitted());
   };
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
@@ -168,13 +168,13 @@ test("non-OS function calls", () => {
 test("refer to OS object", () => {
   // prettier-ignore
   let input = function osObj() {
-        let targets = projects;
-      };
+    let targets = projects;
+  };
 
   // prettier-ignore
   let expectedOutput = async function osObj() {
-        let targets = this.projects;
-      };
+    let targets = this.projects;
+  };
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
