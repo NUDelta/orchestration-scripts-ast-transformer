@@ -2,6 +2,26 @@ import { asyncThisTransformerConfig, transformOSCode } from "../controllers/babe
 import { trimLeadingTrailingSpace } from "./utils";
 
 /**
+ * Applicable set tests
+ */
+test("applicable set with complex filter", () => {
+  let input = function applicableSet() {
+    return projects.includeIf(isPhdStudentProject() && isWritingAPaper());
+  };
+
+  // prettier-ignore
+  let expectedOutput = async function applicableSet() {
+    return await this.projects.includeIf((await this.isPhdStudentProject()) && (await this.isWritingAPaper()));
+  };
+
+  let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
+
+  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
+    trimLeadingTrailingSpace(expectedOutput.toString())
+  );
+});
+
+/**
  * Detector tests
  */
 test("detector for last SIG meeting", () => {
@@ -24,8 +44,8 @@ test("detector for last SIG meeting", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(expectedOutput.toString())).toMatch(
-    trimLeadingTrailingSpace(transformedCode.toString())
+  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
+    trimLeadingTrailingSpace(expectedOutput.toString())
   );
 });
 
@@ -41,12 +61,11 @@ test("detector for having students send updated sprints after SIG", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(expectedOutput.toString())).toMatch(
-    trimLeadingTrailingSpace(transformedCode.toString())
+  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
+    trimLeadingTrailingSpace(expectedOutput.toString())
   );
 });
 
-// TODO: failing tests
 test("detector for 1 week before Status Update", () => {
   let input = function detector() {
     return isWeekBefore(project.statusUpdateDate);
@@ -59,8 +78,8 @@ test("detector for 1 week before Status Update", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(expectedOutput.toString())).toMatch(
-    trimLeadingTrailingSpace(transformedCode.toString())
+  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
+    trimLeadingTrailingSpace(expectedOutput.toString())
   );
 });
 
@@ -71,13 +90,13 @@ test("detector for overcommitted on sprint", () => {
 
   // prettier-ignore
   let expectedOutput = async function detector() {
-    return await this.dayOf(this.venue("SIG")) && await this.project.sprintLog.isOverCommitted();
+    return (await this.dayOf(await this.venue("SIG"))) && (await this.project.sprintLog.isOverCommitted());
   };
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(expectedOutput.toString())).toMatch(
-    trimLeadingTrailingSpace(transformedCode.toString())
+  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
+    trimLeadingTrailingSpace(expectedOutput.toString())
   );
 });
 
@@ -97,8 +116,8 @@ test("send feedback to project channel", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(expectedOutput.toString())).toMatch(
-    trimLeadingTrailingSpace(transformedCode.toString())
+  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
+    trimLeadingTrailingSpace(expectedOutput.toString())
   );
 });
 
@@ -118,7 +137,7 @@ test("feedback opportunity 5 mins before SIG", () => {
 
   let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
 
-  expect(trimLeadingTrailingSpace(expectedOutput.toString())).toMatch(
-    trimLeadingTrailingSpace(transformedCode.toString())
+  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
+    trimLeadingTrailingSpace(expectedOutput.toString())
   );
 });
