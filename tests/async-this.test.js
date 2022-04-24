@@ -141,3 +141,62 @@ test("feedback opportunity 5 mins before SIG", () => {
     trimLeadingTrailingSpace(expectedOutput.toString())
   );
 });
+
+/**
+ * Miscellaneous
+ */
+test("non-OS function calls", () => {
+  // prettier-ignore
+  let input = function nonOSFn() {
+      let testArray = [];
+      return testArray.toString();
+    };
+
+  // prettier-ignore
+  let expectedOutput = async function nonOSFn() {
+      let testArray = [];
+      return testArray.toString();
+    };
+
+  let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
+
+  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
+    trimLeadingTrailingSpace(expectedOutput.toString())
+  );
+});
+
+test("refer to OS object", () => {
+  // prettier-ignore
+  let input = function osObj() {
+        let targets = projects;
+      };
+
+  // prettier-ignore
+  let expectedOutput = async function osObj() {
+        let targets = this.projects;
+      };
+
+  let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
+
+  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
+    trimLeadingTrailingSpace(expectedOutput.toString())
+  );
+});
+
+test("non-OS object member", () => {
+  // prettier-ignore
+  let input = function osObj() {
+      return testVar.length;
+    };
+
+  // prettier-ignore
+  let expectedOutput = async function osObj() {
+      return testVar.length;
+    };
+
+  let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
+
+  expect(trimLeadingTrailingSpace(transformedCode.toString())).toMatch(
+    trimLeadingTrailingSpace(expectedOutput.toString())
+  );
+});
