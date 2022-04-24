@@ -23,8 +23,18 @@ const trimLeadingTrailingSpace = function (textBlock) {
  * @returns [string, string] array with minified received code and expected code.
  */
 export const prepareCodeForEqualityTesting = function (receivedCode, expectedCode) {
+  const minifierOptions = {
+    mangle: false,
+    compress: false,
+    // optional if you want the code to be to stay human-readable
+    // output: {
+    //   beautify: true,
+    //   comments: true,
+    // },
+  };
+
   return [
-    UglifyJS.minify(receivedCode.toString()).code,
-    UglifyJS.minify(expectedCode.toString()).code,
+    UglifyJS.minify(receivedCode.toString(), minifierOptions).code,
+    UglifyJS.minify(expectedCode.toString(), minifierOptions).code,
   ];
 };
