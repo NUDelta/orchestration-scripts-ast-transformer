@@ -1,5 +1,9 @@
 import babel from "@babel/core";
-import { addAsyncAwaitPlugin, addThisPlugin } from "./babelPlugins.js";
+import {
+  addAsyncAwaitPlugin,
+  addThisPlugin,
+  convertHumanCodeToOSCodePlugin,
+} from "./babelPlugins.js";
 
 /**
  * Transforms input code based on the babel configuration passed in.
@@ -16,6 +20,13 @@ export const transformOSCode = function (code, config) {
  */
 export const asyncThisConfig = {
   plugins: [addAsyncAwaitPlugin, addThisPlugin],
+
+  // keep any white space so code stays pretty
+  retainLines: true,
+};
+
+export const humanToOsConfig = {
+  plugins: [convertHumanCodeToOSCodePlugin],
 
   // keep any white space so code stays pretty
   retainLines: true,

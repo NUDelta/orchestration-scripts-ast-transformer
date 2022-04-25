@@ -17,6 +17,10 @@ export const addAsyncAwaitPlugin = function () {
         path.node.async = true;
       },
 
+      FunctionExpression(path) {
+        path.node.async = true;
+      },
+
       CallExpression(path) {
         // make any calls to OS functions async
         // check if the call is not already async before adding the await block
@@ -53,8 +57,10 @@ export const addThisPlugin = function () {
         if (t.isIdentifier(path.node.object)) {
           // check if the identifier is not a local variable
           if (!path.scope.hasBinding(path.node.object.name)) {
-            let variableName = path.node.object.name;
-            if (this.plObjIdentifiers.has(variableName)) {
+            let identifierString = path.node.object.name;
+
+            // check if either a variable from OS
+            if (this.plObjIdentifiers.has(identifierString)) {
               // add this. to the OS PL function
               path.replaceWith(
                 t.memberExpression(
@@ -71,8 +77,11 @@ export const addThisPlugin = function () {
         exit(path) {
           // on exit (after the node has been visted), check if identifier is a member
           if (!t.isMemberExpression(path.parentPath.node)) {
-            // if not, add this. if it's a OS PL object
-            if (this.plObjIdentifiers.has(path.node.name)) {
+            // add "this" keyword if it's a OS PL object or fn (usually a predicate)
+            if (
+              this.plObjIdentifiers.has(path.node.name) ||
+              this.plFnIdentifiers.has(path.node.name)
+            ) {
               path.replaceWith(t.memberExpression(t.thisExpression(), path.node));
             }
           }
@@ -108,7 +117,69 @@ export const addThisPlugin = function () {
   };
 };
 
-// TODO: implement
 export const convertHumanCodeToOSCodePlugin = function () {
-  return {};
+  return {
+    pre() {
+      // TODO: need to add placeholders for at() and repeat()
+      this.outputScript = t.objectExpression([]);
+    },
+    visitor: {
+      FunctionDeclaration: {
+        exit(path) {
+          path.get("body").replaceWith(t.blockStatement([t.returnStatement(this.outputScript)]));
+        },
+      },
+      CallExpression(path) {
+        // get identifier for call expression
+        let callee = path.node.callee;
+        let expressionName = "";
+        if (t.isIdentifier(callee)) {
+          expressionName = callee.name;
+        } else if (t.isMemberExpression(callee)) {
+          expressionName = callee.property.name;
+        }
+
+        // specify replacement identifiers for functions
+        let replacementIdenfier = "";
+        switch (expressionName) {
+          case "applyTo":
+            replacementIdenfier = "applicableSet";
+            break;
+
+          case "when":
+            replacementIdenfier = "detector";
+            break;
+
+          case "then":
+            replacementIdenfier = "feedback";
+            break;
+
+          case "at":
+            replacementIdenfier = "feedbackOpportunity";
+            break;
+
+          case "shouldRepeat":
+            replacementIdenfier = "repeatStrategy";
+            break;
+        }
+
+        let identifierObject = t.identifier(replacementIdenfier);
+
+        // add function to outputScript object
+        this.outputScript.properties.push(
+          t.objectProperty(
+            identifierObject,
+            t.functionExpression(
+              t.identifier(""),
+              [],
+              t.blockStatement([t.returnStatement(path.node.arguments[0])])
+            )
+          )
+        );
+
+        // get only the top-level paths
+        path.skip();
+      },
+    },
+  };
 };

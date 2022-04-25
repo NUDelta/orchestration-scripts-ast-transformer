@@ -45,13 +45,13 @@ const outputPrograms = inputPrograms.map((inputProgram) => {
 
 // print input and transformed output code
 for (let i = 0; i < inputPrograms.length; i++) {
-  let [formattedOutput, formatedInput] = prepareCodeForEqualityTesting(
+  let [formattedOutput, formattedInput] = prepareCodeForEqualityTesting(
     outputPrograms[i].toString(),
     inputPrograms[i].toString(),
     true
   );
 
-  console.log(`input code: \n${formatedInput} \n`);
+  console.log(`input code: \n${formattedInput} \n`);
   console.log(`output code: \n${formattedOutput}`);
   console.log("-------------------------------------------------------");
 }
