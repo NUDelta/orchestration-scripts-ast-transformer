@@ -84,8 +84,23 @@ async function feedbackOpportunity() {
 
 ## Usage
 
-To see a demo of the transformations, run: `yarn start`. This will cause run the code in `index.js`,
-and print out from input code and the transformed output.
+### Demo 1: adding async/await flags and this keywords to OS code
+
+Run this demo by running `yarn async-this-demo`. One example of this transformation looks like:
+
+```javascript
+//input code:
+function applicableSet() {
+  return projects.includeIf(isPhdStudentProject() && isWritingAPaper());
+}
+
+// output code:
+async function applicableSet() {
+  return await this.projects.includeIf(
+    (await this.isPhdStudentProject()) && (await this.isWritingAPaper())
+  );
+}
+```
 
 ## Tests
 

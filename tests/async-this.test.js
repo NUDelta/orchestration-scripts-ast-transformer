@@ -1,5 +1,5 @@
-import { asyncThisTransformerConfig, transformOSCode } from "../controllers/babelTransformers";
-import { prepareCodeForEqualityTesting } from "./utils";
+import { asyncThisConfig, transformOSCode } from "../controllers/babelConfigurations.js";
+import { prepareCodeForEqualityTesting } from "../imports/utils.js";
 
 /**
  * Applicable set tests
@@ -15,7 +15,7 @@ test("applicable set with complex filter", () => {
     );
   };
 
-  let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
+  let transformedCode = transformOSCode(input, asyncThisConfig);
 
   // setup received and expected code variables to check equality on
   let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
@@ -42,7 +42,7 @@ test("detector for last SIG meeting", () => {
     return new Date(lastSigMeetingTime.start_time);
   };
 
-  let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
+  let transformedCode = transformOSCode(input, asyncThisConfig);
 
   // setup received and expected code variables to check equality on
   let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
@@ -58,7 +58,7 @@ test("detector for having students send updated sprints after SIG", () => {
     return await this.isDayAfter(await this.venue("SIG"));
   };
 
-  let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
+  let transformedCode = transformOSCode(input, asyncThisConfig);
 
   // setup received and expected code variables to check equality on
   let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
@@ -74,7 +74,7 @@ test("detector for 1 week before Status Update", () => {
     return await this.isWeekBefore(this.project.statusUpdateDate);
   };
 
-  let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
+  let transformedCode = transformOSCode(input, asyncThisConfig);
 
   // setup received and expected code variables to check equality on
   let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
@@ -93,7 +93,7 @@ test("detector for overcommitted on sprint", () => {
     );
   };
 
-  let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
+  let transformedCode = transformOSCode(input, asyncThisConfig);
 
   // setup received and expected code variables to check equality on
   let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
@@ -116,7 +116,7 @@ test("send feedback to project channel", () => {
     );
   };
 
-  let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
+  let transformedCode = transformOSCode(input, asyncThisConfig);
 
   // setup received and expected code variables to check equality on
   let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
@@ -135,7 +135,7 @@ test("feedback opportunity 5 mins before SIG", () => {
     return await this.minutesBefore(await this.venue("SIG"), 5);
   };
 
-  let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
+  let transformedCode = transformOSCode(input, asyncThisConfig);
 
   // setup received and expected code variables to check equality on
   let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
@@ -156,7 +156,7 @@ test("non-OS function calls", () => {
     return testArray.toString();
   };
 
-  let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
+  let transformedCode = transformOSCode(input, asyncThisConfig);
 
   // setup received and expected code variables to check equality on
   let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
@@ -172,7 +172,7 @@ test("refer to OS object", () => {
     let targets = this.projects;
   };
 
-  let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
+  let transformedCode = transformOSCode(input, asyncThisConfig);
 
   // setup received and expected code variables to check equality on
   let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
@@ -188,7 +188,7 @@ test("non-OS object member", () => {
     return testVar.length;
   };
 
-  let transformedCode = transformOSCode(input, asyncThisTransformerConfig);
+  let transformedCode = transformOSCode(input, asyncThisConfig);
 
   // setup received and expected code variables to check equality on
   let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);

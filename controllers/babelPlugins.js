@@ -6,7 +6,7 @@ import {
   functionIdentifiers,
 } from "../imports/orchestration-pl/identifierSet.js";
 
-const addAsyncAwaitPlugin = function () {
+export const addAsyncAwaitPlugin = function () {
   return {
     pre() {
       this.plObjIdentifiers = objectIdentifiers;
@@ -41,7 +41,7 @@ const addAsyncAwaitPlugin = function () {
   };
 };
 
-const addThisPlugin = function () {
+export const addThisPlugin = function () {
   return {
     pre() {
       this.plObjIdentifiers = objectIdentifiers;
@@ -108,19 +108,7 @@ const addThisPlugin = function () {
   };
 };
 
-export const asyncThisTransformerConfig = {
-  plugins: [addAsyncAwaitPlugin, addThisPlugin],
-
-  // keep any white space so code stays pretty
-  retainLines: true,
-};
-
-/**
- * Transforms input code based on the babel configuration passed in.
- * @param {string} code: block of code to tranform.
- * @param {object} config: babel configuration with plugins that is used to transform the code.
- */
-export const transformOSCode = function (code, config) {
-  let output = babel.transformSync(code, config);
-  return output.code;
+// TODO: implement
+export const convertHumanCodeToOSCodePlugin = function () {
+  return {};
 };

@@ -20,18 +20,21 @@ const trimLeadingTrailingSpace = function (textBlock) {
  * Prepares two blocks of code for comparison by minifying each code block.
  * @param {string} receivedCode code block that was manipulated by transforms.
  * @param {string} expectedCode code block that we expect received code to be.
+ * @param {boolean} shouldBeautify optional parameter for if the code should be beautified.
  * @returns [string, string] array with minified received code and expected code.
  */
-export const prepareCodeForEqualityTesting = function (receivedCode, expectedCode) {
+export const prepareCodeForEqualityTesting = function (receivedCode, expectedCode, shouldBeautify) {
   const minifierOptions = {
     mangle: false,
     compress: false,
-    // optional if you want the code to be to stay human-readable
-    // output: {
-    //   beautify: true,
-    //   comments: true,
-    // },
   };
+
+  if (shouldBeautify !== undefined && shouldBeautify) {
+    minifierOptions.output = {
+      beautify: true,
+      comments: true,
+    };
+  }
 
   return [
     UglifyJS.minify(receivedCode.toString(), minifierOptions).code,

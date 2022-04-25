@@ -8,7 +8,8 @@
     "Kapil Garg (https://kgarg.com/)"
   ],
   "scripts": {
-    "start": "node index.js",
+    "async-this-demo": "node asyncThisDemo.js",
+    "human-to-os-demo": "node humanToOSDemo.js",
     "test": "NODE_OPTIONS='--experimental-vm-modules' jest ./tests"
   },
   "engines": {

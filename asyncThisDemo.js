@@ -1,11 +1,18 @@
-import { asyncThisTransformerConfig, transformOSCode } from "./controllers/babelTransformers.js";
+import { transformOSCode, asyncThisConfig } from "./controllers/babelConfigurations.js";
+import { prepareCodeForEqualityTesting } from "./imports/utils.js";
+
 import {
   objectIdentifiers,
   functionIdentifiers,
 } from "./imports/orchestration-pl/identifierSet.js";
 
 // input programs to test
-const inputCodes = [
+const inputPrograms = [
+  // select student projects who are writing papers
+  function applicableSet() {
+    return projects.includeIf(isPhdStudentProject() && isWritingAPaper());
+  },
+
   // check if its the last SIG meeting
   function detector() {
     // get time for last sig meeting
@@ -25,23 +32,26 @@ const inputCodes = [
     return currPointsCommitted >= 1.25 * currPointsAvailable;
   },
 
-  // send feedback during SIG
+  // send feedback 5 minutes before SIG meeting
   function feedbackOpportunity() {
-    return during(venue("SIG"));
+    return minutesBefore(venue("SIG"), 5);
   },
 ];
 
 // generate output
-const outputCodes = inputCodes.map((inputCode) => {
-  return transformOSCode(inputCode, asyncThisTransformerConfig);
+const outputPrograms = inputPrograms.map((inputProgram) => {
+  return transformOSCode(inputProgram, asyncThisConfig);
 });
 
 // print input and transformed output code
-for (let i = 0; i < inputCodes.length; i++) {
-  console.log(`input code: \n${inputCodes[i].toString()} \n`);
-  console.log(`output code: \n${outputCodes[i].toString()}`);
+for (let i = 0; i < inputPrograms.length; i++) {
+  let [formattedOutput, formatedInput] = prepareCodeForEqualityTesting(
+    outputPrograms[i].toString(),
+    inputPrograms[i].toString(),
+    true
+  );
+
+  console.log(`input code: \n${formatedInput} \n`);
+  console.log(`output code: \n${formattedOutput}`);
   console.log("-------------------------------------------------------");
 }
-
-console.log(objectIdentifiers);
-console.log(functionIdentifiers);
