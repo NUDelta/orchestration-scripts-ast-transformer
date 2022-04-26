@@ -22,6 +22,22 @@ test("applicable set with complex filter", () => {
   expect(receivedCode).toMatch(expectedCode);
 });
 
+test("applicable set with predicate (not executed function) for filtering", () => {
+  let input = function applicableSet() {
+    return projects.excludeIf(isPhdStudentProject);
+  };
+
+  let expectedOutput = async function applicableSet() {
+    return await this.projects.excludeIf(this.isPhdStudentProject);
+  };
+
+  let transformedCode = transformOSCode(input, asyncThisConfig);
+
+  // setup received and expected code variables to check equality on
+  let [receivedCode, expectedCode] = prepareCodeForEqualityTesting(transformedCode, expectedOutput);
+  expect(receivedCode).toMatch(expectedCode);
+});
+
 /**
  * Detector tests
  */
