@@ -125,6 +125,7 @@ export const convertHumanCodeToOSCodePlugin = function () {
     },
     visitor: {
       FunctionDeclaration: {
+        // replace the entire function definition on the exit of the traversal
         exit(path) {
           path.get("body").replaceWith(t.blockStatement([t.returnStatement(this.outputScript)]));
         },

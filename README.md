@@ -102,6 +102,60 @@ async function applicableSet() {
 }
 ```
 
+### Demo 2: tranforming human-friendly OS code to machine-executable representation
+
+Run this demo by running `yarn human-to-os-demo`. One example of this transformation looks like
+this:
+
+```javascript
+// input program
+function overcommittedOnSprint() {
+  // for these people or projects
+  applyTo(projects.excludeIf(isPhdStudentProject));
+
+  // when this happens
+  when(
+    isDayOf(venues.sig) &&
+      project.sprintLog.committedPoints >= 1.25 * project.sprintLog.availablePoints
+  );
+
+  // then provide this feedback
+  then(
+    message(
+      "Looks like your students have planned way more than their available points. If applicable, try to discuss slicing strategies with them during SIG.",
+      project.sigHead
+    )
+  );
+
+  // at this venue
+  at(minutesBefore(venues.sig, 5));
+}
+
+// output program
+async function overcommittedOnSprint() {
+  return {
+    applicableSet: async function () {
+      return await this.projects.excludeIf(this.isPhdStudentProject);
+    },
+    detector: async function () {
+      return (
+        (await this.isDayOf(this.venues.sig)) &&
+        this.project.sprintLog.committedPoints >= 1.25 * this.project.sprintLog.availablePoints
+      );
+    },
+    feedback: async function () {
+      return await this.message(
+        "Looks like your students have planned way more than their available points. If applicable, try to discuss slicing strategies with them during SIG.",
+        this.project.sigHead
+      );
+    },
+    feedbackOpportunity: async function () {
+      return await this.minutesBefore(this.venues.sig, 5);
+    },
+  };
+}
+```
+
 ## Tests
 
 Testing code for a larger set of examples is also included in `./tests/`. These can be run with

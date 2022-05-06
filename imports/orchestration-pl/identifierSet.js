@@ -8,12 +8,15 @@ import * as projectFn from "./projectFn.js";
 import * as predicateFn from "./predicateFn.js";
 import * as filterFn from "./filtersFn.js";
 
+import { venue, venues } from "./objects/venues.js";
 import { sig, sigs } from "./objects/sigs.js";
 import { student, students } from "./objects/students.js";
 import { projects, project } from "./objects/projects.js";
 import { committees, committee } from "./objects/committees.js";
 
 const allObjects = {
+  venue,
+  venues,
   sig,
   sigs,
   student,

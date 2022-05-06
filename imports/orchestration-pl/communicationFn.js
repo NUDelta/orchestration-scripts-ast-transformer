@@ -45,3 +45,5 @@ export const getSlackChannelForProject = async function () {};
 
 // TODO: why does this take an input instead of using the info from this?
 export const getSlackIdForPerson = async function (people) {};
+
+export const message = async function (messageText, target, opportunity) {};
